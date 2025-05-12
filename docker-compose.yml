@@ -1,0 +1,51 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:15
+    container_name: supchat_db
+    restart: always
+    environment:
+      POSTGRES_USER: supchatuser
+      POSTGRES_PASSWORD: supchatpassword123
+      POSTGRES_DB: supchatdb
+    ports:
+      - "5432:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    networks:
+      - supchat_net
+
+  api:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: supchat_api
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__DefaultConnection=Host=db;Port=5432;Database=supchatdb;Username=supchatuser;Password=supchatpassword123
+    ports:
+      - "5000:8080"
+    depends_on:
+      - db
+    networks:
+      - supchat_net
+
+  client:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: supchat_client
+    ports:
+      - "3000:3000"
+    depends_on:
+      - api
+    networks:
+      - supchat_net
+
+volumes:
+  db_data:
+
+networks:
+  supchat_net:
+    driver: bridge
