@@ -1,15 +1,32 @@
-# README – Installation, Lancement et Exemples d’Utilisation
+# README – mise en place actuelle de la base technique du projet.
+
+!!! (Le readme va changer, il existe pour l'instant pour expliquer ce qui a été fait pour la base du projet pour que se soit clair)
+base du projet:
+- base backend : dotnet new webapi -n backend
+- base frontend : npm create vite@latest frontend -- --template react-ts
+- Docker (contenairiser) : DockerFile, Docker Compose, docker-compose up --build  !!!
 
 ## Présentation
 
-SUPCHAT est 
+SUPCHAT est une application de messagerie interne destinée aux entreprises, visant à améliorer la communication et la collaboration entre employés.
+
+Le projet repose sur une architecture fullstack :
+
+- Backend en ASP.NET Core Web API avec Entity Framework Core pour la gestion des données.
+
+- Frontend en React.js (ou Vite/Next.js selon choix final).
+
+- Base de données PostgreSQL (gratuit).
+
+- Contenerisation complète via Docker et orchestration avec Docker Compose.
 
 ## Installation
 
 ### Prérequis
 
 - .NET 9 SDK (ou version compatible)
-- SQL Server (ou LocalDB)
+- PostgreSQL
+- Docker et DOcker Compose installés
 - macOS, Windows ou Linux
 
 ### 1. Récupérer le projet
@@ -17,115 +34,117 @@ SUPCHAT est
 Clone le dépôt Git :
 
 ```bash
-git clone https://github.com/Paul-Mrsch/3ASPC_Proj.git
-cd TaskFlow
+git clone https://github.com/
+cd supchatPasserelle
 ```
 
-### 2. Configuration de la base de données
+### 2. Lancer l'application via Docker
 
-- Vérifie/modifie la chaîne de connexion dans `appsettings.json` :
+Depuis la racine du projet(où se trouve le fichier docker-compose.yml):
 
-```json
-"ConnectionStrings": {
-  "DefaultConnection": "Server=(localdb)\\MSSQLLocalDB;Database=TaskFlowDb;Trusted_Connection=True;"
-}
-```
+``
+docker-compose up --build
+``
 
-### 3. Appliquer les migrations EF Core
+Cela va :
 
-```bash
-dotnet ef database update
-```
+- Lancer l'API backend sur http://localhost:5000
 
-### 4. Lancer l’API
+- Lancer le frontend sur http://localhost:3000
 
-```bash
-dotnet run
-```
+- Créer et démarrer le serveur de base de données PostgreSQL.
 
-L’API sera accessible sur `https://localhost:5001` (ou le port affiché dans la console).
+Les services communiquent automatiquement grâce aux réseaux définis dans Docker Compose.
 
-## Documentation Swagger
+### 3. Avancement Actuel
 
-- Accède à Swagger sur : `https://localhost:5001/swagger`
-- Utilise le bouton "Authorize" pour tester les endpoints protégés (JWT).
+À ce stade, la base technique contient :
 
-## Exemples de requêtes
+## Backend (ASP.NET Core, C#)
 
-### Inscription
+- Connexion à la base PostgreSQL configurée.
 
-```http
-POST /api/user/register
-Content-Type: application/json
+- Structure propre avec :
 
-{
-  "name": "Jean Dupont",
-  "email": "jean.dupont@email.com",
-  "password": "MotDePasse123!"
-}
-```
+  - Controllers/ : Points d'entrée API futurs
 
-### Connexion (récupérer un JWT)
+  - Models/ : Entités principales (User, Message, etc.)
 
-```http
-POST /api/user/login
-Content-Type: application/json
+  - DTOs/ : Objets de transfert de données
 
-{
-  "email": "jean.dupont@email.com",
-  "password": "MotDePasse123!"
-}
-```
+  - Services/ : Structure pour la logique métier
 
-### Créer un projet
+  - Data/ : Contexte EF Core (DbContext)
 
-```http
-POST /api/projects
-Authorization: Bearer <votre_token_jwt>
-Content-Type: application/json
+  - Mappings/ : (Automapper / Mapping manuel futur)
 
-{
-  "name": "Projet SUPINFO",
-  "description": "Projet de gestion de tâches pour le cours .NET"
-}
-```
+  - Middleware/ : (Préparé pour la gestion des erreurs personnalisées)
 
-### Lister les projets
+  - SignalR/ : Dossier prêt pour intégrer la communication temps réel (chat en direct)
 
-```http
-GET /api/projects
-Authorization: Bearer <votre_token_jwt>
-```
+  - Dockerfile : Permet de builder et lancer l'API en container.
 
-### Créer une tâche
+## Frontend (React.js)
 
-```http
-POST /api/tasks
-Authorization: Bearer <votre_token_jwt>
-Content-Type: application/json
+- Création du projet frontend avec :
 
-{
-  "title": "Faire le rapport",
-  "status": "ÀFaire",
-  "dueDate": "2025-04-30T23:59:59",
-  "commentaires": [ "Commencer par l’intro" ],
-  "projectId": 1
-}
-```
+  - src/ : Arborescence initiale prête pour les pages, composants, services API, hooks personnalisés.
+
+  - Dockerfile : Pour construire et exécuter l’application web en container Nginx.
+
+## Base de données (PostgreSQL)
+- Une base de données PostgreSQL est créée automatiquement via Docker.
+
+- Configuration dans docker-compose.yml :
+
+  - Image utilisée : postgres:15
+
+  - Nom du container : supchat_db
+
+- Persistance assurée grâce à un volume Docker (db_data) pour conserver les données même après un arrêt du container.
+
+## Docker Compose
+- Définit trois services:
+  - backend: API en API.NET Core
+  - frontend: Application React
+  - base de donnée: PostgreSQL
 
 ## Architecture du projet
 
-- `Controllers/` : Contrôleurs API REST
-- `Models/` : Entités EF Core (User, Project, TaskItem)
-- `DTOs/` : Objets de transfert pour l’API
-- `Services/` : Logique métier (interfaces + implémentations)
-- `Data/` : Contexte EF Core
-- `Middleware/` : Gestion des erreurs
-- `Helpers/` : JWT, enums, etc.
+supchat/
+├── backend/
+│   ├── Controllers/
+│   ├── Data/
+│   ├── DTOs/
+│   ├── Mappings/
+│   ├── Middleware/
+│   ├── Migrations/
+│   ├── Models/
+│   ├── Services/
+│   ├── SignalR/
+│   ├── Dockerfile
+│   └── ...
+├── frontend/
+│   ├── src/
+│   │   ├── assets/
+│   │   ├── components/
+│   │   ├── pages/
+│   │   ├── services/
+│   │   ├── hooks/
+│   │   └── ...
+│   ├── Dockerfile
+│   └── ...
+├── docker-compose.yml
+└── README.md
+
 
 ## Choix techniques
 
-- ASP.NET Core 9, Entity Framework Core, SQL Server
-- Authentification JWT
-- Swagger (doc auto, exemples, support JWT)
-- Séparation claire des responsabilités (services, DTOs, contrôleurs)
+- ASP.NET Core 9 + Entity Framework Core
+- React.js avec Vite ou Next.js
+- Authentification JWT (prévue)
+- Communication temps réel via SignalR (prévu)
+- PostgreSQL
+- Architecture contenerisée pour faciliter le déploiement
+- Séparation stricte Backend/Frontend
+- Scalabilité pensée dès la conception
