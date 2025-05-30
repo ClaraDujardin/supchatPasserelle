@@ -1,0 +1,11 @@
+{
+  "name": "supchat",
+  "version": "1.0.0",
+  "description": "!!! (Le readme va changer, il existe pour l'instant pour expliquer ce qui a été fait pour la base du projet pour que se soit clair)\r base du projet:\r - base backend : dotnet new webapi -n backend\r - base frontend : npm create vite@latest frontend -- --template react-ts\r - Docker (contenairiser) : DockerFile, Docker Compose, docker-compose up --build  !!!",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "mohamed",
+  "license": "ISC"
+}
