@@ -141,7 +141,7 @@ supchat/
 ## Choix techniques
 
 - ASP.NET Core 9 + Entity Framework Core
-- React.js avec Vite ou Next.js
+- React.js avec typescript
 - Authentification JWT (prévue)
 - Communication temps réel via SignalR (prévu)
 - PostgreSQL
