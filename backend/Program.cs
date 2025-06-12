@@ -8,6 +8,8 @@ using Backend.Data;
 using Backend.Services;
 using Backend.Mappings;
 using Backend.Hubs;
+using Backend.Middleware;
+using Backend.SignalR;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -28,6 +30,7 @@ builder.Services.AddScoped<IFileUploadService, FileUploadService>();
 // ---------- SignalR ----------
 builder.Services.AddSignalR();
 builder.Services.AddScoped<IMessageService, MessageService>();
+builder.Services.AddScoped<INotificationService, NotificationService>();
 
 // ---------- Authentification JWT ----------
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -118,13 +121,14 @@ app.Use(async (context, next) =>
 }
 
 app.UseHttpsRedirection();
-app.UseStaticFiles();
 app.UseRouting();
+app.UseStaticFiles();
 app.UseMiddleware<Backend.Middleware.ErrorHandlingMiddleware>();
 app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
 app.MapHub<ChatHub>("/chatHub");
+app.MapHub<NotificationHub>("/notificationHub");
 
 app.Run();

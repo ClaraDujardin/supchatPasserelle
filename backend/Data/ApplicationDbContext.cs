@@ -14,5 +14,6 @@ namespace Backend.Data
         public DbSet<ChannelMembership> ChannelMemberships { get; set; }
         public DbSet<Message> Messages { get; set; }
         public DbSet<FileUpload> FileUploads { get; set; }
+        public DbSet<Notification> Notifications { get; set; }
     }
 }
