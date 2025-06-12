@@ -47,6 +47,20 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         };
     });
 
+
+// ---------- Connexion  Front - Back----------
+builder.Services.AddCors(options =>
+    {
+        options.AddPolicy("AllowFrontend", policy =>
+        {
+            policy.WithOrigins("http://localhost:5173") // Port du frontend
+                .AllowAnyHeader()
+                .AllowAnyMethod();
+        });
+    });
+
+builder.Services.AddControllers();
+
 builder.Services.AddAuthorization();
 
 // ---------- Swagger ----------
@@ -125,6 +139,7 @@ app.UseRouting();
 app.UseStaticFiles();
 app.UseMiddleware<Backend.Middleware.ErrorHandlingMiddleware>();
 app.UseAuthentication();
+app.UseCors("AllowFrontend");
 app.UseAuthorization();
 
 app.MapControllers();
