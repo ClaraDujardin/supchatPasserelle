@@ -4,11 +4,12 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using System.Reflection;
-
 using Backend.Data;
 using Backend.Services;
 using Backend.Mappings;
 using Backend.Hubs;
+using Backend.Middleware;
+using Backend.SignalR;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -28,6 +29,8 @@ builder.Services.AddScoped<IFileUploadService, FileUploadService>();
 
 // ---------- SignalR ----------
 builder.Services.AddSignalR();
+builder.Services.AddScoped<IMessageService, MessageService>();
+builder.Services.AddScoped<INotificationService, NotificationService>();
 
 // ---------- Authentification JWT ----------
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -40,9 +43,23 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidIssuer = "supchat",
             ValidAudience = "supchat-users",
             IssuerSigningKey = new SymmetricSecurityKey(
-                Encoding.UTF8.GetBytes("supersecretkey123")) // à sécuriser
+                Encoding.UTF8.GetBytes("supinfo_super_secret_2025____key**!!"))
         };
     });
+
+
+// ---------- Connexion  Front - Back----------
+builder.Services.AddCors(options =>
+    {
+        options.AddPolicy("AllowFrontend", policy =>
+        {
+            policy.WithOrigins("http://localhost:5173") // Port du frontend
+                .AllowAnyHeader()
+                .AllowAnyMethod();
+        });
+    });
+
+builder.Services.AddControllers();
 
 builder.Services.AddAuthorization();
 
@@ -104,7 +121,7 @@ app.Use(async (context, next) =>
     }
     catch (Exception ex)
     {
-        Console.WriteLine("💥 Exception interceptée : " + ex.Message);
+        Console.WriteLine(" Exception interceptée : " + ex.Message);
         throw;
     }
 });
@@ -118,13 +135,15 @@ app.Use(async (context, next) =>
 }
 
 app.UseHttpsRedirection();
-app.UseStaticFiles();
 app.UseRouting();
+app.UseStaticFiles();
 app.UseMiddleware<Backend.Middleware.ErrorHandlingMiddleware>();
 app.UseAuthentication();
+app.UseCors("AllowFrontend");
 app.UseAuthorization();
 
 app.MapControllers();
 app.MapHub<ChatHub>("/chatHub");
+app.MapHub<NotificationHub>("/notificationHub");
 
 app.Run();

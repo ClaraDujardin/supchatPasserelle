@@ -2,6 +2,7 @@ using AutoMapper;
 using Backend.Data;
 using Backend.DTOs;
 using Backend.Models;
+using Backend.Helpers;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -10,7 +11,7 @@ namespace Backend.Services
     public interface IUserService
     {
         Task<UserResponseDto> RegisterAsync(RegisterUserDto dto);
-        Task<UserResponseDto?> LoginAsync(LoginUserDto dto);
+        Task<string?> LoginAsync(LoginUserDto dto); 
         Task<IEnumerable<UserResponseDto>> GetAllAsync();
     }
 
@@ -34,10 +35,11 @@ namespace Backend.Services
             user.PasswordHash = _passwordHasher.HashPassword(user, dto.Password);
             _context.Users.Add(user);
             await _context.SaveChangesAsync();
-            return _mapper.Map<UserResponseDto>(user);
+
+            return _mapper.Map<UserResponseDto>(user); 
         }
 
-        public async Task<UserResponseDto?> LoginAsync(LoginUserDto dto)
+        public async Task<string?> LoginAsync(LoginUserDto dto)
         {
             var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == dto.Email);
             if (user == null) return null;
@@ -45,7 +47,7 @@ namespace Backend.Services
             var result = _passwordHasher.VerifyHashedPassword(user, user.PasswordHash, dto.Password);
             if (result == PasswordVerificationResult.Failed) return null;
 
-            return _mapper.Map<UserResponseDto>(user);
+            return JwtTokenGenerator.GenerateToken(user); // ✅ retourne le token
         }
 
         public async Task<IEnumerable<UserResponseDto>> GetAllAsync()

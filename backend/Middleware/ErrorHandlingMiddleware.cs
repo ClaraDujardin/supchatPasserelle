@@ -29,6 +29,11 @@ namespace Backend.Middleware
 
         private static Task HandleExceptionAsync(HttpContext context, Exception ex)
         {
+            Console.WriteLine("EXCEPTION DETAILS");
+            Console.WriteLine(ex.GetType().Name);
+            Console.WriteLine(ex.Message);
+            Console.WriteLine(ex.StackTrace);
+
             var statusCode = (int)HttpStatusCode.InternalServerError;
 
             var result = JsonSerializer.Serialize(new

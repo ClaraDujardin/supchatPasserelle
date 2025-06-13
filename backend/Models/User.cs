@@ -9,6 +9,7 @@ namespace Backend.Models
         public string UserName { get; set; } = null!;
         public string Email { get; set; } = null!;
         public string PasswordHash { get; set; } = null!;
+        public string? ProfilePictureUrl { get; set; }
 
         public ICollection<WorkspaceMembership> WorkspaceMemberships { get; set; } = new List<WorkspaceMembership>();
         public ICollection<ChannelMembership> ChannelMemberships { get; set; } = new List<ChannelMembership>();
