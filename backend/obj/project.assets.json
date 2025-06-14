@@ -6147,19 +6147,19 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\DARK\\.nuget\\packages\\": {}
+    "C:\\Users\\clara\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\DARK\\Desktop\\backendCOMPLET\\backend\\backend.csproj",
+      "projectUniqueName": "C:\\Users\\clara\\Desktop\\SUPINFO\\SupchatPasserelle\\backend\\backend.csproj",
       "projectName": "backend",
-      "projectPath": "C:\\Users\\DARK\\Desktop\\backendCOMPLET\\backend\\backend.csproj",
-      "packagesPath": "C:\\Users\\DARK\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\DARK\\Desktop\\backendCOMPLET\\backend\\obj\\",
+      "projectPath": "C:\\Users\\clara\\Desktop\\SUPINFO\\SupchatPasserelle\\backend\\backend.csproj",
+      "packagesPath": "C:\\Users\\clara\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\clara\\Desktop\\SUPINFO\\SupchatPasserelle\\backend\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\DARK\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        "C:\\Users\\clara\\AppData\\Roaming\\NuGet\\NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net8.0"

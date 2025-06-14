@@ -2,8 +2,13 @@
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /app
 
-COPY . .
+# Copie ciblée pour profiter du cache Docker
+COPY *.csproj ./
 RUN dotnet restore
+
+# Copie le reste du code source
+COPY . . 
+
 RUN dotnet publish -c Release -o out
 
 # 2. Runtime stage
