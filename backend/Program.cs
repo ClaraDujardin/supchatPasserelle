@@ -47,17 +47,16 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         };
     });
 
-
 // ---------- Connexion  Front - Back----------
 builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowFrontend", policy =>
     {
-        options.AddPolicy("AllowFrontend", policy =>
-        {
-        policy.WithOrigins("http://localhost:5173", "http://localhost") // Port du frontend
-                .AllowAnyHeader()
-                .AllowAnyMethod();
-        });
+        policy.WithOrigins("http://localhost:5173", "http://localhost") // Ports du frontend (dev et prod)
+            .AllowAnyHeader()
+            .AllowAnyMethod();
     });
+});
 
 builder.Services.AddControllers();
 
@@ -113,18 +112,18 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.UseDeveloperExceptionPage();
-app.Use(async (context, next) =>
-{
-    try
+    app.Use(async (context, next) =>
     {
-        await next();
-    }
-    catch (Exception ex)
-    {
-        Console.WriteLine(" Exception interceptée : " + ex.Message);
-        throw;
-    }
-});
+        try
+        {
+            await next();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(" Exception interceptée : " + ex.Message);
+            throw;
+        }
+    });
 
     app.UseSwagger();
     app.UseSwaggerUI(options =>
