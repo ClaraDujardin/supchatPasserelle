@@ -1,116 +1,50 @@
-# README – mise en place actuelle de la base technique du projet.
+# README – Supchat B3 Passerelle
 
-!!! (Le readme va changer, il existe pour l'instant pour expliquer ce qui a été fait pour la base du projet pour que se soit clair)
-base du projet:
-- base backend : dotnet new webapi -n backend
-- base frontend : npm create vite@latest frontend -- --template react-ts
-- Docker (contenairiser) : DockerFile, Docker Compose, docker-compose up --build  !!!
-
-## Présentation
+# SUPCHAT
 
 SUPCHAT est une application de messagerie interne destinée aux entreprises, visant à améliorer la communication et la collaboration entre employés.
 
-Le projet repose sur une architecture fullstack :
+## Sommaire
 
-- Backend en ASP.NET Core Web API avec Entity Framework Core pour la gestion des données.
+- [Présentation](#présentation)
+- [Fonctionnalités](#fonctionnalités)
+- [Architecture du projet](#architecture-du-projet)
+- [Technologies utilisées](#technologies-utilisées)
+- [Installation et lancement](#installation-et-lancement)
+- [Utilisation de l'API](#utilisation-de-lapi)
+- [Développement](#développement)
+- [Auteurs](#auteurs)
 
-- Frontend en React.js (ou Vite/Next.js selon choix final).
+---
 
-- Base de données PostgreSQL (gratuit).
+## Présentation
 
-- Contenerisation complète via Docker et orchestration avec Docker Compose.
+SUPCHAT repose sur une architecture fullstack :
 
-## Installation
+- **Backend** : ASP.NET Core Web API avec Entity Framework Core (C#)
+- **Frontend** : React.js (Vite, TypeScript, TailwindCSS)
+- **Base de données** : PostgreSQL
+- **Temps réel** : SignalR pour la messagerie instantanée et les notifications
+- **Conteneurisation** : Docker & Docker Compose
 
-### Prérequis
+---
 
-- .NET 9 SDK (ou version compatible)
-- PostgreSQL
-- Docker et DOcker Compose installés
-- macOS, Windows ou Linux
+## Fonctionnalités
 
-### 1. Récupérer le projet
+- Authentification JWT (inscription, connexion)
+- Gestion des utilisateurs et profils (photo, email, etc.)
+- Espaces de travail (workspaces) publics/privés
+- Canaux de discussion (channels) par workspace
+- Messagerie instantanée (texte, fichiers)
+- Notifications en temps réel (SignalR)
+- Upload de fichiers (messages, profils)
+- Interface web responsive (React + TailwindCSS)
 
-Clone le dépôt Git :
-
-```bash
-git clone https://github.com/
-cd supchatPasserelle
-```
-
-### 2. Lancer l'application via Docker
-
-Depuis la racine du projet(où se trouve le fichier docker-compose.yml):
-
-``
-docker-compose up --build
-``
-
-Cela va :
-
-- Lancer l'API backend sur http://localhost:5000
-
-- Lancer le frontend sur http://localhost:3000
-
-- Créer et démarrer le serveur de base de données PostgreSQL.
-
-Les services communiquent automatiquement grâce aux réseaux définis dans Docker Compose.
-
-### 3. Avancement Actuel
-
-À ce stade, la base technique contient :
-
-## Backend (ASP.NET Core, C#)
-
-- Connexion à la base PostgreSQL configurée.
-
-- Structure propre avec :
-
-  - Controllers/ : Points d'entrée API futurs
-
-  - Models/ : Entités principales (User, Message, etc.)
-
-  - DTOs/ : Objets de transfert de données
-
-  - Services/ : Structure pour la logique métier
-
-  - Data/ : Contexte EF Core (DbContext)
-
-  - Mappings/ : (Automapper / Mapping manuel futur)
-
-  - Middleware/ : (Préparé pour la gestion des erreurs personnalisées)
-
-  - SignalR/ : Dossier prêt pour intégrer la communication temps réel (chat en direct)
-
-  - Dockerfile : Permet de builder et lancer l'API en container.
-
-## Frontend (React.js)
-
-- Création du projet frontend avec :
-
-  - src/ : Arborescence initiale prête pour les pages, composants, services API, hooks personnalisés.
-
-  - Dockerfile : Pour construire et exécuter l’application web en container Nginx.
-
-## Base de données (PostgreSQL)
-- Une base de données PostgreSQL est créée automatiquement via Docker.
-
-- Configuration dans docker-compose.yml :
-
-  - Image utilisée : postgres:15
-
-  - Nom du container : supchat_db
-
-- Persistance assurée grâce à un volume Docker (db_data) pour conserver les données même après un arrêt du container.
-
-## Docker Compose
-- Définit trois services:
-  - backend: API en API.NET Core
-  - frontend: Application React
-  - base de donnée: PostgreSQL
+---
 
 ## Architecture du projet
 
+```
 supchat/
 ├── backend/
 │   ├── Controllers/
@@ -122,6 +56,7 @@ supchat/
 │   ├── Models/
 │   ├── Services/
 │   ├── SignalR/
+│   ├── wwwroot/
 │   ├── Dockerfile
 │   └── ...
 ├── frontend/
@@ -136,15 +71,143 @@ supchat/
 │   └── ...
 ├── docker-compose.yml
 └── README.md
+```
 
+---
 
-## Choix techniques
+## Technologies utilisées
 
-- ASP.NET Core 9 + Entity Framework Core
-- React.js avec Vite ou Next.js
-- Authentification JWT (prévue)
-- Communication temps réel via SignalR (prévu)
-- PostgreSQL
-- Architecture contenerisée pour faciliter le déploiement
-- Séparation stricte Backend/Frontend
-- Scalabilité pensée dès la conception
+- **Backend** : ASP.NET Core 8/9, Entity Framework Core, SignalR, AutoMapper, JWT, PostgreSQL
+- **Frontend** : React 19, Vite, TypeScript, TailwindCSS, Lucide React
+- **Base de données** : PostgreSQL 15
+- **Conteneurisation** : Docker, Docker Compose
+- **Autres** : Nginx (serveur statique frontend), ESLint, AutoMapper
+
+---
+
+## Installation et lancement
+
+### Prérequis
+
+- [.NET SDK 8 ou 9](https://dotnet.microsoft.com/download)
+- [Node.js 20+](https://nodejs.org/)
+- [Docker & Docker Compose](https://www.docker.com/)
+- [PostgreSQL](https://www.postgresql.org/) (si hors Docker)
+
+### 1. Cloner le projet
+
+```bash
+!!faire bien attention à récuperer le projet dans la branch main pour avoir la version la plus complète et actuelle de notre projet.!!
+
+git clone https://github.com/ClaraDujardin/supchatPasserelle.git
+cd supchatPasserelle
+```
+
+### 2. Lancer avec Docker Compose
+
+Depuis la racine du projet :
+
+```bash
+docker-compose up --build
+```
+
+- **Backend** : http://localhost:8080
+- **Frontend** : http://localhost (port 80)
+- **PostgreSQL** : localhost:5432 (user/pass dans `docker-compose.yml`)
+
+### 3. Lancer manuellement (développement)
+
+#### Backend
+
+```bash
+cd backend
+dotnet restore
+dotnet ef database update # si migrations à appliquer
+dotnet run
+```
+
+#### Frontend
+
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+---
+
+## Utilisation de l'API
+
+### Authentification
+
+- **Inscription** : `POST /api/users/register`
+- **Connexion** : `POST /api/users/login` (retourne un JWT)
+
+### Utilisateurs
+
+- `GET /api/users` (auth requis)
+- `POST /api/users/{id}/profile-picture` (upload photo)
+
+### Workspaces
+
+- `GET /api/workspaces` (auth requis)
+- `POST /api/workspaces` (création)
+- `POST /api/workspaces/{id}/members` (ajout membre)
+
+### Channels
+
+- `GET /api/channels/workspace/{workspaceId}`
+- `POST /api/channels`
+- `POST /api/channels/{channelId}/members`
+
+### Messages
+
+- `GET /api/messages/channel/{channelId}`
+- `POST /api/messages` (envoyer message)
+
+### Notifications
+
+- **Temps réel** via SignalR (`/notificationHub`)
+- Test : `POST /api/users/{userId}/test-notif`
+
+---
+
+## Développement
+
+### Backend
+
+- Code C# dans [backend/](backend/)
+- Configuration base de données : [backend/appsettings.json](backend/appsettings.json)
+- Swagger UI : http://localhost:8080 (en dev)
+
+### Frontend
+
+- Code React/TS dans [frontend/src/](frontend/src/)
+- Configuration API : variable d'env `VITE_API_URL`
+- Lint : `npm run lint`
+- Build : `npm run build`
+
+---
+
+## Auteurs
+
+- Mohamed Coulibaly
+- Clara Dujardin
+- Rachid Najari
+- Assala Amrani
+
+---
+
+## Licence
+
+Projet académique SUPINFO – 2025.  
+
+## Remarques
+
+- Pour toute question contactez l'équipe projet.
+- Les migrations EF Core sont déjà prêtes, mais possibilité d'en ajouter avec `dotnet ef migrations add NomMigration`.
+- Les images de profil et fichiers sont stockés dans `backend/wwwroot/`.
+
+---
+
+Bon développement sur SUPCHAT !
